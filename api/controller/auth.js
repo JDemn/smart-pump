@@ -43,7 +43,7 @@ export const auth = async (req, res = response, next) => {
         const users = db.data?.users || [];
         
         const usuario = users.find((user) => user.email === email);
-
+        
         if (!usuario) {
             return res.status(400).json({ msg: ERROR_MESSAGES?.NOT_VALID_USER });
         }
@@ -67,6 +67,12 @@ export const auth = async (req, res = response, next) => {
                 email: usuario.email,
                 name: `${usuario.name.first} ${usuario.name.last}`,
                 isActive: usuario.isActive,
+                balance : usuario.balance,
+                picture : usuario.picture,
+                age : usuario.age,
+                company : usuario.company,
+                address : usuario.address,
+                phone : usuario.phone
             },
             token
         });

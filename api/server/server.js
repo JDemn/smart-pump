@@ -26,8 +26,7 @@ export class Server {
         try {
             const dbConnection = new Connection();
             await dbConnection.dbConnection(); 
-            this.db = dbConnection.db;
-            console.log('Base de datos conectada:', this.db.data);
+            this.db = dbConnection.db;            
             this.app.locals.db = this.db;
         } catch (error) {
             console.error('Error al inicializar la base de datos:', error);
@@ -50,6 +49,8 @@ export class Server {
     async routes() {
         const authRouter = (await import('../routes/auth.js')).default;
         this.app.use(this.path.auth, authRouter);
+        const userRoute = ( await import('../routes/user.js')).default;
+        this.app.use( this.path.user, userRoute );
     }
 
     errorHandling() {        

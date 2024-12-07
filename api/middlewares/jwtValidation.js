@@ -1,5 +1,6 @@
 import { response, request } from 'express';
 import jwt from'jsonwebtoken';
+import { ERROR_MESSAGES } from '../constants/constants.js';
 
 /**
  * @middleware jwtValidation
@@ -21,16 +22,26 @@ export const jwtValidation = async( req = request ,res = response , next ) => {
     const token = req.header('token');
     if(!token) {
         return res.status(401).json({
-            msg : 'No se ha proporcionado token de acceso en la petición'
+            msg : ERROR_MESSAGES?.NOT_TOKEN_PROVIDED
+        });
+    }
+    if (!process.env.SECRETORPRIVATEKEY) {
+        return res.status(500).json({
+            msg: ERROR_MESSAGES?.MISSING_SECRET_CONFIGURATION,
         });
     }
     try {
+        /*const decoded = jwt.verify(token, process.env.SECRETORPRIVATEKEY);
+        console.log("Decodificación exitosa del token:", decoded); */
         const { uid } = jwt.verify(token, process.env.SECRETORPRIVATEKEY)
-        
+        if (!uid) {
+            return res.status(401).json({ msg: ERROR_MESSAGES?.TOKEN_OR_UID_NOT_vALID });
+        }
+
         const db = req.app.locals.db;
 
         if (!db) {
-            return res.status(500).json({ msg: 'Base de datos no disponible' });
+            return res.status(500).json({ msg: ERROR_MESSAGES?.DB_UNREACHEABLE });
         }
 
         await db.read();
@@ -38,27 +49,27 @@ export const jwtValidation = async( req = request ,res = response , next ) => {
         
         const user = users.find((user) => user._id === uid);
 
-        console.log(`usuario nombre :${user}`)
         if( !user ){
             return res.status(401).json({
-                msg : 'Token no válido, el usuario no existe'
+                msg : ERROR_MESSAGES?.INVALID_TOKEN_OR_USER_DOESNT_EXIST
             }) 
         }
-        if( !user.state ){
+
+        if( !user.isActive ){
             return res.status(401).json({
-                msg : 'Token no válido'
+                msg : ERROR_MESSAGES?.INVALID_TOKEN
             })
         }
 
         req.user = user;
 
         next()
-    }catch(error){
+    }catch(error){        
         if(error.name === 'TokenExpiredError'){
-            return res.status(403).json({ msg: 'El token ha expirado, favor de volver a inciar sesión' });
+            return res.status(403).json({ msg: ERROR_MESSAGES?.EXPIRED_TOKEN });
         }else {
             return res.status(401).json({
-                msg : 'token no válido'
+                msg : ERROR_MESSAGES?.INVALID_TOKEN
             })
         }
     }

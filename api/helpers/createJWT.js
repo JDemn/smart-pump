@@ -1,4 +1,5 @@
 import jwt from'jsonwebtoken';
+import { ERROR_MESSAGES } from '../constants/constants.js';
 
 /**
  * @function createJWT
@@ -18,14 +19,14 @@ import jwt from'jsonwebtoken';
  */
 export const createJWT =( uid='' )=>{
     return new Promise((resolve,reject)=>{
-        const payload = { uid };
+        const payload = { uid };        
         jwt.sign( payload,process.env.SECRETORPRIVATEKEY,{
             expiresIn : '10h'
         },(err,token)=>{
             if(err){
                 console.log(err);
-                reject('No se pudo generar el JWT')
-            }else {
+                reject(ERROR_MESSAGES?.UNABLE_TO_GENERATE_JWT)
+            }else {                
                 resolve( token );
             }
         })
