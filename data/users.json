@@ -3,13 +3,13 @@
     {
       "_id": "5410953eb0e0c0ae25608277",
       "guid": "eab0324c-75ef-49a1-9c49-be2d68f50b96",
-      "isActive": true,
+      "isActive": false,
       "balance": "$3,585.69",
       "picture": "http://placehold.it/32x32",
       "age": 30,
       "eyeColor": "blue",
       "name": {
-        "first": "José Guadalupe",
+        "first": "José ",
         "last": " Deniz Mancilla"
       },
       "company": "GEEKNET",
