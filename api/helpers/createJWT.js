@@ -23,8 +23,7 @@ export const createJWT =( uid='' )=>{
         jwt.sign( payload,process.env.SECRETORPRIVATEKEY,{
             expiresIn : '10h'
         },(err,token)=>{
-            if(err){
-                console.log(err);
+            if(err){                
                 reject(ERROR_MESSAGES?.UNABLE_TO_GENERATE_JWT)
             }else {                
                 resolve( token );

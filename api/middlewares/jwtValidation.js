@@ -31,8 +31,6 @@ export const jwtValidation = async( req = request ,res = response , next ) => {
         });
     }
     try {
-        /*const decoded = jwt.verify(token, process.env.SECRETORPRIVATEKEY);
-        console.log("Decodificación exitosa del token:", decoded); */
         const { uid } = jwt.verify(token, process.env.SECRETORPRIVATEKEY)
         if (!uid) {
             return res.status(401).json({ msg: ERROR_MESSAGES?.TOKEN_OR_UID_NOT_vALID });

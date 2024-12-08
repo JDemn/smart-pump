@@ -34,6 +34,7 @@ export interface AppState {
     setIsAuthenticated: (status: boolean) => void;
     loginUser: (email: string, password: string) => Promise<void>;
     updateUser : (formState : {} , userId : string )=> Promise<void>;
+    logoutUser : ()=>void;
     error : null | string;
     gralMsg : null | string;
 }

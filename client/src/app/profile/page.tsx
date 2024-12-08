@@ -12,8 +12,7 @@ export default function Profile() {
 
     const isMobile = useMediaQuery('(max-width: 600px)');
     const toggleMobileMenu = () => setMobileMenuOpen((prev) => !prev);
-    const { user, error, updateUser, gralMsg } = useAppContext();
-    console.log("user en profile", user);
+    const { user, error, updateUser, gralMsg , logoutUser } = useAppContext();    
 
     const { onInputChange, formState } = useForm({
         name: {
@@ -60,7 +59,7 @@ export default function Profile() {
                                     <ListItem
                                         component="button"
                                         button
-                                        onClick={() => console.log('Logout clicked')}
+                                        onClick={logoutUser}
                                     >
                                         <LogoutIcon />
                                         <ListItemText primary="Logout" sx={{ ml: 1 }} />
@@ -71,7 +70,23 @@ export default function Profile() {
                 }
 
             </AppBar>
+            <AppBar position="sticky" sx={{ backgroundColor: '#f5f5f5', color: '#333', boxShadow: 'none', display: { xs: 'none', md: 'flex' }, justifyContent: 'space-between', alignItems: 'center' }}>
+                <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                    <Typography variant="h6" sx={{ flexGrow: 1 }}>
+                        Profile
+                    </Typography>
 
+                    {/* Logout Button */}
+                    <Button 
+                        variant="outlined" 
+                        sx={{ display: 'flex', alignItems: 'center' }} 
+                        onClick={logoutUser}
+                    >
+                        <LogoutIcon sx={{ mr: 1 }} />
+                        Logout
+                    </Button>
+                </Toolbar>
+            </AppBar>
             <Box
                 sx={{
                     display: 'flex',
