@@ -1,6 +1,16 @@
 export interface FormState {
-    [key: string]: string | number | Boolean | Function | null | [{}] | undefined | {};
+    [key: string]: 
+        | string
+        | number
+        | boolean
+        | null
+        | undefined
+        | NestedObject;
 }
+interface NestedObject {
+    [key: string]: string | number | boolean | null | undefined | NestedObject;
+}
+
 
 export interface User {
     _id: string | undefined;

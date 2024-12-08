@@ -12,22 +12,25 @@ export default function Profile() {
 
     const isMobile = useMediaQuery('(max-width: 600px)');
     const toggleMobileMenu = () => setMobileMenuOpen((prev) => !prev);
-    const { user , error ,updateUser , gralMsg } = useAppContext();
+    const { user, error, updateUser, gralMsg } = useAppContext();
     console.log("user en profile", user);
 
     const { onInputChange, formState } = useForm({
-        name: user?.name || '',
+        name: {
+            first: user?.name?.first || '',
+            last: user?.name?.last || ''
+        },
         email: user?.email || '',
-        age: user?.age || '',
+        age: Number(user?.age) || '',
         company: user?.company || '',
         address: user?.address || '',
         phone: user?.phone || ''
     });
 
-    const editData = async ( event: React.FormEvent ) => {
+    const editData = async (event: React.FormEvent) => {
         event.preventDefault();
         try {
-            await updateUser( formState, user?._id as string);            
+            await updateUser(formState, user?._id as string);
         } catch (error) {
             console.error('failed editing user', error);
         }
@@ -116,9 +119,17 @@ export default function Profile() {
                                 Edit your personal data:
                             </Typography>
                             <TextField
-                                label="Name"
-                                name="name"
-                                value={`${formState.name}`}
+                                label="First name"
+                                name="name.first" 
+                                value={formState.name?.first || ''}
+                                onChange={onInputChange}
+                                fullWidth
+                                sx={{ mb: 2 }}
+                            />
+                            <TextField
+                                label="Last name"
+                                name="name.last"
+                                value={formState.name?.last || ''}
                                 onChange={onInputChange}
                                 fullWidth
                                 sx={{ mb: 2 }}
@@ -138,6 +149,7 @@ export default function Profile() {
                                 onChange={onInputChange}
                                 fullWidth
                                 sx={{ mb: 2 }}
+                                type='number'
                             />
                             <TextField
                                 label="Company"
@@ -158,13 +170,13 @@ export default function Profile() {
                             <TextField
                                 label="Phone"
                                 name="phone"
-                                value={formState.phone}
+                                value={formState?.phone}
                                 onChange={onInputChange}
                                 fullWidth
-                                sx={{ mb: 2 }}
+                                sx={{ mb: 2 }}                                
                             />
                             {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
-                            {gralMsg && <Alert severity="success" sx={{ mt : 2 }}>{gralMsg}</Alert>}
+                            {gralMsg && <Alert severity="success" sx={{ mt: 2 }}>{gralMsg}</Alert>}
                             <Button variant="contained" onClick={editData} sx={{ width: '100%' }}>Edit data</Button>
                         </Box>
                     )}

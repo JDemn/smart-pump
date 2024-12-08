@@ -58,14 +58,18 @@ export const auth = async (req, res = response, next) => {
                 msg: ERROR_MESSAGES?.NOT_VALID_USER
             });
         }
-
+                
         const token = await createJWT(usuario._id);
 
+        const firstName = usuario.name?.first || '';
+        const lastName = usuario.name?.last || '';
+        const fullName = `${firstName} ${lastName}`.trim(); 
+        
         return res.status(200).json({
             usuario: {
                 _id: usuario._id,
                 email: usuario.email,
-                name: `${usuario.name.first} ${usuario.name.last}`,
+                name: usuario.name || fullName,
                 isActive: usuario.isActive,
                 balance : usuario.balance,
                 picture : usuario.picture,

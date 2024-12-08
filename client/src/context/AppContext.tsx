@@ -10,7 +10,10 @@ const AppContext = createContext<AppState | undefined>(undefined);
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
     const router = useRouter()
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<User | null>(() => {
+        const storedUser = localStorage.getItem('user');
+        return storedUser ? JSON.parse(storedUser) : null;
+    });
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [gralMsg, setGralMsg] = useState<string | null>(null);
@@ -47,17 +50,16 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
                     ...prevUser,
                     ...dataUpdated.user,
                 }));
-
+                localStorage.setItem('user', JSON.stringify(dataUpdated?.user));
                 setError(null);
                 setGralMsg(() => 'User updated successfully');
             } catch (error) {
                 console.log('FAILED', error);
-                setError((prevError) => {
-                    if (error instanceof Error && error.message) {
-                        return error.message;
-                    }
-                    return 'An unexpected error occurred';
-                });
+                if (error instanceof Error && error.message) {
+                    setError(error.message)
+                }else{
+                    setError('An unexpected error occurred')
+                }
             }
         },
         []

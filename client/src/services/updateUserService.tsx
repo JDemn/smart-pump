@@ -18,6 +18,12 @@ export const updateUserS = async (formState: any, userId: string) => {
 
         if (!response.ok) {
             const errorData = await response.json();
+            if (Array.isArray(errorData.errors)) {
+                const formattedErrors = errorData.errors.map(
+                    (err: any) => `${err.path}: ${err.msg}`
+                );
+                throw new Error(formattedErrors.join(' | '));
+            }
             throw new Error(errorData.msg || 'Update failed');
         }
 
