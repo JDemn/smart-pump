@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import  cors  from'cors';
+import http from 'http'; 
 import { Connection } from '../db/dbConnection.js';
 import { API_ROUTES } from '../constants/constants.js';
 import { errorMiddleware } from '../middlewares/errorMiddleware.js';
@@ -10,6 +11,8 @@ export class Server {
     constructor() {
         this.app = express();
         this.port = process.env.PORT || 8080;
+        this.hostname = '0.0.0.0';
+        this.server = http.createServer(this.app);
         this.db = null;
         this.path = {
             user : API_ROUTES?.USERS,
@@ -36,7 +39,7 @@ export class Server {
     middlewares() {
         const allowedOrigins = ['http://localhost:3000'];
         this.app.use(cors({
-            origin: allowedOrigins,
+            origin: '*',
             methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
             preflightContinue: false,
             optionsSuccessStatus: 204
