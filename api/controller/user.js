@@ -4,6 +4,8 @@ import { filterEditableFields } from "../helpers/user.js";
 /**
  * @description Allow users edit only data allowed
  * @param req express object
+ * @method PUT
+ * @route /api/user/update/userId
  * @param responde express response object 
  * @next express object
  * @returns { Object } user updated or server error response

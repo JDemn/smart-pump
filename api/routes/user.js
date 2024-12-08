@@ -7,7 +7,7 @@ import { fieldValidation } from "../middlewares/fieldValidation.js";
 const router = new Router;
 
 /**
- * @route PUT /api/user/update
+ * @route PUT /api/user/update:userId
  * @description Allow users edit his data
  * @access Private
  */
