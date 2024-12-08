@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { login } from '@/services/authService'; // Asumimos que el login es un servicio
-import { updateUserS } from '@/services/updateUserService'; // Lo mismo con updateUser
+import { login } from '@/services/authService'; 
+import { updateUserS } from '@/services/updateUserService';
 import { AppState, User } from '@/interfaces/interface';
 
 const AppContext = createContext<AppState | undefined>(undefined);
@@ -28,8 +28,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     const loginUser = async (email: string, password: string) => {
         try {
             const userData = await login(email, password);
-            setUser(userData.usuario);
+            setUser(userData.usuario);            
             setIsAuthenticated(true);
+            localStorage.setItem('user', JSON.stringify(userData.usuario));
             setError(null);
             router.push('/profile');
         } catch (error) {            

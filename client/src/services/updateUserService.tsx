@@ -31,7 +31,6 @@ export const updateUserS = async (formState: any, userId: string) => {
 
         return data;
     } catch (error) {
-        console.error('Error updating user:', error);
         throw error;
     }
 };

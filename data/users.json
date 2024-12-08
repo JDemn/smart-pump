@@ -43,10 +43,10 @@
       "isActive": true,
       "balance": "$1,668.20",
       "picture": "http://placehold.it/32x32",
-      "age": 50,
+      "age": "60",
       "eyeColor": "green",
       "name": {
-        "first": "Lottt",
+        "first": "Lot",
         "last": "Kramer"
       },
       "company": "POSHOME",

@@ -38,3 +38,8 @@ export interface AppState {
     error : null | string;
     gralMsg : null | string;
 }
+export interface BTN {
+    method : ()=> void;
+    icon: React.ReactNode;
+    text : string
+}
