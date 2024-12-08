@@ -1,20 +1,40 @@
 'use client';
-import React, { useState } from 'react';
-import { AppBar, Toolbar, IconButton, Typography, Button, Box, Avatar, Menu, MenuItem, Drawer, List, ListItem, ListItemText, useMediaQuery } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { AppBar, Toolbar, IconButton, Typography, Button, Box, Avatar, Menu, MenuItem, Drawer, List, ListItem, ListItemText, useMediaQuery, TextField, Alert } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { useAppContext } from '@/context/AppContext';
+import { useForm } from '@/hooks/useForm';
 
 export default function Profile() {
     const [selectedOption, setSelectedOption] = useState<'balance' | 'edit' | null>(null);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    
+
     const isMobile = useMediaQuery('(max-width: 600px)');
     const toggleMobileMenu = () => setMobileMenuOpen((prev) => !prev);
+    const { user , error ,updateUser , gralMsg } = useAppContext();
+    console.log("user en profile", user);
 
+    const { onInputChange, formState } = useForm({
+        name: user?.name || '',
+        email: user?.email || '',
+        age: user?.age || '',
+        company: user?.company || '',
+        address: user?.address || '',
+        phone: user?.phone || ''
+    });
 
+    const editData = async ( event: React.FormEvent ) => {
+        event.preventDefault();
+        try {
+            await updateUser( formState, user?._id as string);            
+        } catch (error) {
+            console.error('failed editing user', error);
+        }
+    }
     return (
         <Box>
-            <AppBar position="static" sx={ { display: { xs: 'block', md: 'none' } ,backgroundColor: '#f5f5f5',color: '#333',boxShadow: 'none'}}>
+            <AppBar position="static" sx={{ display: { xs: 'block', md: 'none' }, backgroundColor: '#f5f5f5', color: '#333', boxShadow: 'none' }}>
                 {
                     isMobile && (
                         <>
@@ -62,13 +82,13 @@ export default function Profile() {
                 {/* Avatar */}
                 <Avatar
                     alt="User Avatar"
-                    src="/path-to-avatar.png"
-                    sx={{ width: { xs : 100 , md : 150 }, height: { xs : 100 , md : 150 }, mb: { xs: 2, md: 3 }, mr: { md: 4 } }}
+                    src={user?.picture}
+                    sx={{ width: { xs: 100, md: 150 }, height: { xs: 100, md: 150 }, mb: { xs: 2, md: 3 }, mr: { md: 4 } }}
                 />
 
                 {/* Options */}
                 <Box>
-                    <Box sx={{ display: 'flex',justifyContent: 'center', mb: 2 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
                         <Button
                             variant="outlined"
                             sx={{ mr: 1 }}
@@ -87,7 +107,7 @@ export default function Profile() {
                     {/* Content based on selection */}
                     {selectedOption === 'balance' && (
                         <Typography variant="body1">
-                            Your current balance is: <strong>$1,000</strong>
+                            Your current balance is: <strong>{user?.balance}</strong>
                         </Typography>
                     )}
                     {selectedOption === 'edit' && (
@@ -95,13 +115,62 @@ export default function Profile() {
                             <Typography variant="body1" sx={{ mb: 1 }}>
                                 Edit your personal data:
                             </Typography>
-                            <Typography variant="body2">Name: John Doe</Typography>
-                            <Typography variant="body2">Email: john.doe@example.com</Typography>
+                            <TextField
+                                label="Name"
+                                name="name"
+                                value={`${formState.name}`}
+                                onChange={onInputChange}
+                                fullWidth
+                                sx={{ mb: 2 }}
+                            />
+                            <TextField
+                                label="Email"
+                                name="email"
+                                value={formState.email}
+                                onChange={onInputChange}
+                                fullWidth
+                                sx={{ mb: 2 }}
+                            />
+                            <TextField
+                                label="Age"
+                                name="age"
+                                value={formState.age}
+                                onChange={onInputChange}
+                                fullWidth
+                                sx={{ mb: 2 }}
+                            />
+                            <TextField
+                                label="Company"
+                                name="company"
+                                value={formState.company}
+                                onChange={onInputChange}
+                                fullWidth
+                                sx={{ mb: 2 }}
+                            />
+                            <TextField
+                                label="Address"
+                                name="address"
+                                value={formState.address}
+                                onChange={onInputChange}
+                                fullWidth
+                                sx={{ mb: 2 }}
+                            />
+                            <TextField
+                                label="Phone"
+                                name="phone"
+                                value={formState.phone}
+                                onChange={onInputChange}
+                                fullWidth
+                                sx={{ mb: 2 }}
+                            />
+                            {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
+                            {gralMsg && <Alert severity="success" sx={{ mt : 2 }}>{gralMsg}</Alert>}
+                            <Button variant="contained" onClick={editData} sx={{ width: '100%' }}>Edit data</Button>
                         </Box>
                     )}
                 </Box>
             </Box>
-            
+
         </Box>
     );
 }
